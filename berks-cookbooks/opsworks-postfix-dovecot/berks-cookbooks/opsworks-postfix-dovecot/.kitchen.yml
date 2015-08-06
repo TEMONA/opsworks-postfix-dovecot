@@ -34,6 +34,7 @@ suites:
   - name: default
     run_list:
       - recipe[postfix]
+      - recipe[dovecot]
     attributes:
       postfix:
         main:
@@ -43,3 +44,37 @@ suites:
             - "10.0.0.0/16"
             - "127.0.0.0/8"
           inet_interfaces: "all"
+      dovecot:
+        protocols:
+          imap: true
+        conf:
+          disable_plaintext_auth: false
+          conf_files_mode: "00640"
+          log_path: "syslog"
+          syslog_facility: "mail"
+          log_timestamp: "%Y-%m-%d %H:%M:%S"
+          mail_location: "maildir:~/Maildir"
+          mail_privileged_group: "mail"
+          services:
+          imap-login:
+            listeners:
+              - inet:imap:
+                - port: 143
+              - inet:imaps:
+                - port: 993
+                  ssl: true
+            service_count: 1
+            process_min_avail: 0
+            vsz_limit: "64M"
+            auth:
+              listeners:
+                - unix:auth-userdb:
+                  - mode: "0600"
+                  - user: "vmail"
+                  - group: "vmail"
+                - unix:/var/spool/postfix/private/auth:
+                  - mode: "0666"
+                  - user: "postfix"
+                  - group: "postfix"
+          postmaster_address: "postmaster@conversion-up.net"
+          hostname: "conversion-up.net"

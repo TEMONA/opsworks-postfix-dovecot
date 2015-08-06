@@ -6,3 +6,6 @@
 #
 # All rights reserved - Do Not Redistribute
 #
+chef_gem "ruby-shadow" do
+  action :install
+end
