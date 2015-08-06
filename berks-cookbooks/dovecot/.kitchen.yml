@@ -1,0 +1,46 @@
+---
+driver:
+  name: vagrant
+  network:
+  - ["forwarded_port", {guest: 110, host: 8110, auto_correct: true}]
+  - ["forwarded_port", {guest: 995, host: 8995, auto_correct: true}]
+  - ["forwarded_port", {guest: 143, host: 8143, auto_correct: true}]
+  - ["forwarded_port", {guest: 993, host: 8993, auto_correct: true}]
+
+provisioner:
+  require_chef_omnibus: true
+
+platforms:
+- name: ubuntu-12.04
+  run_list: recipe[apt]
+- name: ubuntu-14.04
+  run_list: recipe[apt]
+- name: ubuntu-14.10
+  run_list: recipe[apt]
+- name: debian-7.8
+  run_list: recipe[apt]
+- name: debian-8.1
+  run_list: recipe[apt]
+- name: centos-6.6
+- name: centos-7.0
+- name: fedora-20
+- name: fedora-21
+
+suites:
+- name: default
+  run_list:
+  - recipe[dovecot_test]
+- name: ldap
+  excludes:
+  # openldap cookbook does not work
+  - centos-6
+  - centos-6.6
+  - centos-7
+  - centos-7.0
+  - fedora-20
+  - fedora-21
+  run_list:
+  - recipe[dovecot_test::ldap]
+- name: attributes
+  run_list:
+  - recipe[dovecot_test::attributes]
