@@ -2,9 +2,5 @@ source "https://supermarket.chef.io"
 
 metadata
 cookbook 'postfix'
-cookbook 'ssl_certificate', '~> 1.3.0'
 cookbook 'dovecot'
-cookbook 'onddo-spamassassin'
-cookbook 'postfixadmin'
-cookbook 'postfix-full'
-cookbook 'postfix-dovecot', git: 'https://github.com/onddo/postfix-dovecot-cookbook'
+cookbook 'user_management'
